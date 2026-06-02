@@ -1,0 +1,209 @@
+{% comment %}
+  Renders a testimonials list populated by blocks. 
+  Blocks can be connected to dynamic sources (metaobjects) in the Theme Editor.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/sections
+{% endcomment %}
+
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'carousel.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign desktop_slides = section.settings.desktop_slides
+  assign mobile_slides = section.settings.mobile_slides
+  assign testimonials_count = section.blocks.size
+-%}
+
+{%- if testimonials_count > 0 -%}
+<div class="carousel-section" style="
+  --slides-desktop: {{ desktop_slides }};
+  --slides-mobile: {{ mobile_slides }};
+">
+
+  {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+    <div class="carousel-section__header">
+      {%- if section.settings.title != blank -%}
+        <h2 class="carousel-section__title">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="carousel-section__subtitle">{{ section.settings.subtitle | escape }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <testimonial-carousel class="carousel-component" role="region" aria-roledescription="carousel" aria-label="Customer Reviews">
+    <div class="carousel__wrapper">
+      
+      {%- if testimonials_count >= 4 -%}
+        <button type="button" class="carousel__arrow carousel__arrow--prev" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button type="button" class="carousel__arrow carousel__arrow--next" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      <div class="carousel__track" tabindex="0" role="group" aria-label="Reviews slider track. Use left and right arrow keys to navigate.">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign t_image = block.settings.image
+            assign t_name = block.settings.reviewer_name
+            assign t_title = block.settings.title
+            assign t_body = block.settings.review_body
+            assign t_rating = block.settings.rating
+
+            assign display_name = t_name | default: "Verified Customer"
+            assign display_title = t_title | default: "Verified Buyer"
+            assign display_body = t_body | default: "<p>Great product and experience. Highly recommended!</p>"
+            assign display_rating = t_rating | default: 5 | plus: 0
+          -%}
+
+          <div class="carousel__slide" data-block-id="{{ block.id }}" {{ block.shopify_attributes }} role="group" aria-roledescription="slide" aria-label="Review {{ forloop.index }} of {{ testimonials_count }}">
+            <div class="testimonial-header">
+              {%- if t_image != blank -%}
+                {{ t_image | image_url: width: 200 | image_tag: alt: display_name }}
+              {%- else -%}
+                <img src="{{ 'avatar-placeholder.svg' | asset_url }}" alt="" class="avatar-fallback" width="48" height="48" aria-hidden="true">
+              {%- endif -%}
+
+              <div class="testimonial-meta">
+                <h3>{{ display_name | escape }}</h3>
+                <h4>{{ display_title | escape }}</h4>
+              </div>
+            </div>
+
+            <div class="testimonial-rating" aria-label="{{ display_rating }} out of 5 stars">
+              <span class="visually-hidden">{{ display_rating }} out of 5 stars</span>
+              <span aria-hidden="true">
+                {%- for i in (1..5) -%}
+                  {%- if i <= display_rating -%}★{%- else -%}☆{%- endif -%}
+                {%- endfor -%}
+              </span>
+            </div>
+
+            <div class="review-body">
+              {{ display_body }}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </testimonial-carousel>
+
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Testimonials List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Hear what our wellness community has to say"
+    },
+    {
+      "type": "range",
+      "id": "desktop_slides",
+      "label": "Slides on Desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "mobile_slides",
+      "label": "Slides on Mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer Name",
+          "default": "Jane Doe"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title / Role",
+          "default": "Verified Customer"
+        },
+        {
+          "type": "richtext",
+          "id": "review_body",
+          "label": "Review Body",
+          "default": "<p>This is an incredible product! It completely changed my routine. Highly recommended!</p>"
+        },
+        {
+          "type": "number",
+          "id": "rating",
+          "label": "Star Rating (1-5)",
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial List",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "reviewer_name": "Sarah Jenkins",
+            "title": "Verified Buyer",
+            "review_body": "<p>I am obsessed! I used to drink Poppi daily, but this is a total game-changer. The sparkling bubbles are perfectly crisp, and it has absolutely zero sugar or artificial aftertaste. Highly recommended!</p>",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "reviewer_name": "Marcus Vildosola",
+            "title": "Drink Specialist",
+            "review_body": "<p>As a beverage specialist, I look closely at ingredient profiles. Compared to Poppi, which still has organic cane sugar, this drink offers a true zero-sugar option without compromising on flavor or fizzy mouthfeel. Exceptional work!</p>",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "reviewer_name": "Elena Rose",
+            "title": "Daily User",
+            "review_body": "<p>This has officially replaced my Poppi stash! It's light, incredibly refreshing, and has none of that weird sweetener aftertaste. A staple in my wellness routine.</p>",
+            "rating": 4
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
