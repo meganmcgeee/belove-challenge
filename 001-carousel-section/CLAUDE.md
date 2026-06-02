@@ -1,0 +1,1 @@
+/Users/meganmcgee/Desktop/dev/belove-challenge/001-carousel-section/AGENTS.md
