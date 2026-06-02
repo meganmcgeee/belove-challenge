@@ -1,0 +1,173 @@
+.carousel-section {
+  padding: 60px 0; /* vertical breathing room above/below the section on mobile */
+}
+
+@media (min-width: 768px) {
+  .carousel-section {
+    padding: 100px 0; /* vertical breathing room above/below the section on desktop */
+  }
+}
+
+.carousel__wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.carousel__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  gap: 20px;
+  scrollbar-width: none; /* Hide scrollbars for Firefox */
+}
+
+.carousel__track::-webkit-scrollbar {
+  display: none; /* Hide scrollbars for Chrome, Safari */
+}
+
+.carousel__slide {
+  flex: 0 0 calc((100% - (var(--slides-mobile) - 1) * 20px) / var(--slides-mobile));
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  background-color: #f8f9fa; /* premium light grey box background */
+  border: 1px solid #e9ecef; /* subtle light grey border */
+  border-radius: 16px; /* rounded border */
+  padding: 32px; /* standard premium box padding on mobile */
+  color: #212529; /* dark text color for readability */
+}
+
+@media (min-width: 768px) {
+  .carousel__slide {
+    flex: 0 0 calc((100% - (var(--slides-desktop) - 1) * 20px) / var(--slides-desktop));
+    padding: 48px; /* increased card padding on desktop for premium visual balance */
+  }
+}
+
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9); /* premium semi-transparent background */
+  border: 1px solid #e9ecef; /* match card border */
+  border-radius: 50%; /* perfect circle shape */
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* very soft shadow for depth */
+  transition: all 0.2s ease-in-out;
+  color: #495057;
+  padding: 0; /* reset padding */
+}
+
+.carousel__arrow:hover {
+  background-color: #ffffff;
+  color: #212529;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-50%) scale(1.05); /* elegant hover scale micro-interaction */
+}
+
+.carousel__arrow--prev {
+  left: 15px;
+}
+
+.carousel__arrow--next {
+  right: 15px;
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px; /* reduced from 16px */
+}
+
+.testimonial-header img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%; /* round image like the mockup */
+  object-fit: cover;
+  display: block;
+}
+
+.testimonial-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.testimonial-meta h3 {
+  margin: 0;
+  font-weight: 700; /* bold the name */
+  font-size: 18px;
+  color: #212529; /* dark heading text */
+}
+
+.testimonial-meta h4 {
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+  color: #6c757d; /* subtle subtitle copy */
+}
+
+.testimonial-rating {
+  margin-bottom: 8px; /* reduced from 16px for a tighter layout */
+  padding-left: 12px; /* indent stars slightly to match visual alignment */
+  font-size: 20px;
+  color: #495057; /* readable star color */
+}
+
+.review-body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #343a40; /* dark review copy */
+}
+
+.review-body p {
+  margin: 0; /* resets browser's default 1em top/bottom margins on rich text paragraph outputs */
+}
+
+/* Visually Hidden Utility for WCAG/ADA Screen Readers */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Header & Typography Styling */
+.carousel-section__header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.carousel-section__title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.carousel-section__subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: #6c757d;
+}
+
+/* Navigation Arrow SVG Dimensions */
+.carousel__arrow svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
